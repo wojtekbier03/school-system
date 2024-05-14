@@ -1,10 +1,12 @@
-package com.wojtekbier03.schoolsystem.Teacher.Controller;
+package com.wojtekbier03.schoolsystem.teacher.controller;
 
-import com.wojtekbier03.schoolsystem.Teacher.Model.Teacher;
-import com.wojtekbier03.schoolsystem.Teacher.Service.TeacherService;
+import com.wojtekbier03.schoolsystem.student.model.Gender;
+import com.wojtekbier03.schoolsystem.teacher.model.Teacher;
+import com.wojtekbier03.schoolsystem.teacher.service.TeacherService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/teachers")
@@ -21,7 +23,7 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}")
-    public Teacher getTeacherById(@PathVariable String id) {
+    public Optional<Teacher> getTeacherById(@PathVariable String id) {
         return teacherService.getTeacherById(id);
     }
 
@@ -31,13 +33,13 @@ public class TeacherController {
     }
 
     @PutMapping("/{id}")
-    public void updateTeacher(@PathVariable String id, @RequestBody Teacher updatedTeacher) {
-        teacherService.updateTeacher(id, updatedTeacher);
+    public void updateTeacher(@PathVariable Teacher currentTeacher, @RequestBody Teacher updatedTeacher) {
+        teacherService.updateTeacher(currentTeacher, updatedTeacher);
     }
 
     @PatchMapping("/{id}/phoneNumber")
-    public void updateTeacherPhoneNumber(@PathVariable String id, @RequestParam String phoneNumber) {
-        teacherService.updateTeacherPhoneNumber(id, phoneNumber);
+    public Teacher updateTeacherPhoneNumber(@PathVariable String id, @RequestParam String phoneNumber) {
+       return teacherService.updateTeacherPhoneNumber(id, phoneNumber);
     }
 
     @GetMapping
@@ -46,7 +48,7 @@ public class TeacherController {
     }
 
     @GetMapping("/{gender}")
-    public List<Teacher> getTeachersByGender(@PathVariable String gender) {
-        return teacherService.getTeachersByGender(gender);
+    public List<Teacher> getTeachersByGender(@PathVariable Gender gender) {
+        return teacherService.getTeachersByGender(String.valueOf(gender));
     }
 }

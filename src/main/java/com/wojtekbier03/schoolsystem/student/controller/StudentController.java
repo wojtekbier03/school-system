@@ -1,20 +1,19 @@
-package com.wojtekbier03.schoolsystem.Student.Controller;
+package com.wojtekbier03.schoolsystem.student.controller;
 
-import com.wojtekbier03.schoolsystem.Student.Model.Student;
-import com.wojtekbier03.schoolsystem.Student.Service.StudentService;
+import com.wojtekbier03.schoolsystem.student.model.Student;
+import com.wojtekbier03.schoolsystem.student.service.StudentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/students")
 public class StudentController {
     private final StudentService studentService;
 
-
-    public StudentController(StudentService studentService) {
-        this.studentService = studentService;
-    }
 
     @PostMapping
     public void addStudent(@RequestBody Student student) {
@@ -22,20 +21,20 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public Student getStudentById(@PathVariable String id) {
+    public Optional<Student> getStudentById(@PathVariable String id) {
         return studentService.getStudentById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteStudentById(@PathVariable String id) {
-        studentService.deleteStudentById(id);
+    public void deleteStudent(@PathVariable String id) {
+        studentService.deleteStudent(id);
     }
 
     @PutMapping("/{id}")
-    public void updateStudent(@PathVariable String id, @RequestBody Student updatedStudent) {
+    public Student updateStudent(@PathVariable String id, @RequestBody Student updatedStudent) {
         studentService.updateStudent(id, updatedStudent);
+        return updatedStudent;
     }
-
 
     @GetMapping
     public List<Student> getAllStudents() {
@@ -43,7 +42,7 @@ public class StudentController {
     }
 
     @GetMapping("/lastName/{lastName}")
-    public List<Student> getStudentsByLastName(@PathVariable String lastName) {
+    public List<Student> getStudentsByLastName(@RequestParam String lastName) {
         return studentService.getStudentsByLastName(lastName);
     }
 }
