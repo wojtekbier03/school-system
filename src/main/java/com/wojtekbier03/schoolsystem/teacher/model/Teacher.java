@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,8 +19,8 @@ public class Teacher {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private LocalDateTime dateOfBirth;
+    private LocalDate dateOfBirth;
     private String pesel;
     private Gender gender;
-    private double salary;
+    private BigDecimal salary;
 }

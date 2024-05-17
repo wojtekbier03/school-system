@@ -3,10 +3,10 @@ package com.wojtekbier03.schoolsystem.student.controller;
 import com.wojtekbier03.schoolsystem.student.model.Student;
 import com.wojtekbier03.schoolsystem.student.service.StudentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,18 +14,18 @@ import java.util.Optional;
 public class StudentController {
     private final StudentService studentService;
 
-
     @PostMapping
     public void addStudent(@RequestBody Student student) {
         studentService.addStudent(student);
     }
 
     @GetMapping("/{id}")
-    public Optional<Student> getStudentById(@PathVariable String id) {
+    public Student getStudentById(@PathVariable String id) {
         return studentService.getStudentById(id);
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteStudent(@PathVariable String id) {
         studentService.deleteStudent(id);
     }
@@ -37,12 +37,12 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> getAllStudents() {
-        return studentService.getAllStudents();
-    }
-
-    @GetMapping("/lastName/{lastName}")
     public List<Student> getStudentsByLastName(@RequestParam String lastName) {
         return studentService.getStudentsByLastName(lastName);
+    }
+
+    @PatchMapping("{id}/dateOfBirth")
+    public Student updateTeacherBirthDate(@PathVariable String id, @RequestBody Student studentNewData) {
+        return studentService.updateStudentBirthday(id, studentNewData);
     }
 }

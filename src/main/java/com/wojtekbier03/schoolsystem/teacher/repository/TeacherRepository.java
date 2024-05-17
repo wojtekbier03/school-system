@@ -2,15 +2,17 @@ package com.wojtekbier03.schoolsystem.teacher.repository;
 
 import com.wojtekbier03.schoolsystem.student.model.Gender;
 import com.wojtekbier03.schoolsystem.teacher.model.Teacher;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class TeacherRepository {
-    private final List<Teacher> teachers = new ArrayList<>();
+    private final List<Teacher> teachers;
+
 
     public Teacher addTeacher(Teacher teacher) {
         teachers.add(teacher);
@@ -23,35 +25,47 @@ public class TeacherRepository {
 
     public Optional<Teacher> getTeacherById(String id) {
         return teachers.stream()
-                .filter(teacher -> teacher.getId().equals(id))
+                .filter(teacher -> teacher.getId().equalsIgnoreCase(id))
                 .findFirst();
     }
 
-    public void deleteTeacherById(String id) {
-        teachers.removeIf(teacher -> teacher.getId().equals(id));
+    public void deleteTeacher(String id) {
+        Teacher teacher = getTeacherById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Teacher with given id does not exist"));
+        teachers.remove(teacher);
     }
 
-    public void updateTeacher(Teacher currentTeacher, Teacher newData) {
-        currentTeacher.setPhoneNumber(newData.getPhoneNumber());
-        currentTeacher.setFirstName(newData.getFirstName());
-        currentTeacher.setLastName(newData.getLastName());
-        currentTeacher.setDateOfBirth(newData.getDateOfBirth());
-        currentTeacher.setPesel(newData.getPesel());
-        currentTeacher.setGender(newData.getGender());
-        currentTeacher.setSalary(newData.getSalary());
+    public Teacher updateTeacher(String id, Teacher teacherNewData) {
+        Teacher teacher = getTeacherById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Teacher with given id does not exist"));
+        teacher.setPhoneNumber(teacherNewData.getPhoneNumber());
+        teacher.setFirstName(teacherNewData.getFirstName());
+        teacher.setLastName(teacherNewData.getLastName());
+        teacher.setDateOfBirth(teacherNewData.getDateOfBirth());
+        teacher.setPesel(teacherNewData.getPesel());
+        teacher.setGender(teacherNewData.getGender());
+        teacher.setSalary(teacherNewData.getSalary());
+        return teacher;
     }
 
-    public void updateTeacherPhoneNumber(String id, String phoneNumber) {
-        Optional<Teacher> teacher = getTeacherById(id);
-        if (teacher.isPresent()) {
-            teacher.get().setPhoneNumber(phoneNumber);
-        }
+    public Teacher updateTeacherPhoneNumber(String id, Teacher teacherNewData) {
+        Teacher teacher = getTeacherById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Teacher with given id does not exist"));
+
+        teacher.setPhoneNumber(teacherNewData.getPhoneNumber());
+        return teacher;
     }
 
-    public List<Teacher> getTeachersByGender(String gender) {
-        Gender genderEnum = Gender.valueOf(gender.toUpperCase());
+    public List<Teacher> getTeacherByGender(Gender gender) {
         return teachers.stream()
-                .filter(teacher -> genderEnum.equals(teacher.getGender()))
+                .filter(teacher -> teacher.getGender() != null && teacher.getGender().equals(gender))
                 .toList();
+    }
+
+    public Teacher updateTeacherBirthday(String id, Teacher teacherNewData) {
+        Teacher teacher = getTeacherById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Teacher with given id does not exist"));
+        teacher.setDateOfBirth(teacherNewData.getDateOfBirth());
+        return teacher;
     }
 }
